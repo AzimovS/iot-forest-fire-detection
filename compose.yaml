@@ -1,0 +1,14 @@
+services:
+  telegraf:
+    image: telegraf
+    container_name: telegraf-agent-collector
+    restart: always
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+
+networks:
+  iot4ffd-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/16
