@@ -1,10 +1,28 @@
 services:
+
+  mqtt:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    restart: always
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+    networks:
+      iot4ffd-network:
+        ipv4_address: 172.30.0.100
+    ports:
+      - "1883:1883"
+
   telegraf:
     image: telegraf
     container_name: telegraf-agent-collector
     restart: always
     volumes:
       - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    networks:
+      iot4ffd-network:
+        ipv4_address: 172.30.0.101
+    depends_on:
+      - mqtt
 
 networks:
   iot4ffd-network:
