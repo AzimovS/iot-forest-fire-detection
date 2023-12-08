@@ -6,16 +6,19 @@ services:
     container_name: telegraf
     restart: always
     volumes:
-    - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
     depends_on:
       - influxdb
     links:
       - influxdb
     ports:
-    - '8125:8125'
+      - '8125:8125'    
+    networks:
+      se4iot-network:
+        ipv4_address: 172.30.0.101
 
   influxdb:
-    image: influxdb:1.8-alpine
+    image: influxdb:2.4-alpine
     container_name: influxdb
     restart: always
     environment:
@@ -26,6 +29,9 @@ services:
       - '8086:8086'
     volumes:
       - influxdb_data:/var/lib/influxdb
+    networks:
+      se4iot-network:
+        ipv4_address: 172.30.0.102
 
   grafana:
     image: grafana/grafana
@@ -43,8 +49,17 @@ services:
       - '3000:3000'
     volumes:
       - grafana_data:/var/lib/grafana
+    networks:
+      se4iot-network:
+        ipv4_address: 172.30.0.103
       
 volumes:
   grafana_data: {}
   influxdb_data: {}
 
+networks:
+  se4iot-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/16
