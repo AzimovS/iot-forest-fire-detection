@@ -1,38 +1,50 @@
-from typing import Any
-from sensor_simulation import SensorManager
-from sensor_simulation.sensors import base_sensor
-from sensor_simulation.clients import MqttClient
-from sensor_simulation.sensors import TemperatureSensor, HumiditySensor, LightIntensitySensor
+import paho.mqtt.client as mqtt
+import random
+import time
 import configparser
+import threading
 
-#Read the config file
+# Load MQTT configuration from file
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-mqtt_client_address = config.get('DEFAULT', 'mqtt_client_address')
-mqtt_port = config.getint('DEFAULT', 'mqtt_port')
-topics = config.get('DEFAULT', 'topics').split(',')
-number_of_areas = config.getint('DEFAULT', 'number_of_areas')
-number_of_forests = config.getint('DEFAULT', 'number_of_forests')
+client_address = config['mqtt']['client_address']
+port = int(config['mqtt']['port'])
+topics = {
+    'temperature': config['mqtt']['topic_temperature'],
+    'humidity': config['mqtt']['topic_humidity'],
+    'light_intensity': config['mqtt']['topic_light'],
+    'air_quality': config['mqtt']['topic_air_quality']
+}
 
-# Create the MQTT client
-mqtt_client = MqttClient(mqtt_client_address, mqtt_port)
+# Function to publish sensor data to MQTT broker
+def publish_sensor_data(sensor, topic):
+    mqtt_client = mqtt.Client()
+    mqtt_client.connect(client_address, port=port)
+    while True:
+        # Generate random sensor data
+        if sensor == 'temperature':
+            data = round(random.uniform(20, 30), 2)  # Simulating temperature between 20 to 30 degrees Celsius
+        elif sensor == 'humidity':
+            data = round(random.uniform(30, 70), 2)  # Simulating humidity between 30% to 70%
+        elif sensor == 'light_intensity':
+            data = random.randint(0, 1000)  # Simulating light intensity between 0 to 1000
+        elif sensor == 'air_quality':
+            data = random.randint(0, 500)  # Simulating air quality index between 0 to 500
 
+        mqtt_client.publish(topic, payload=str(data))
+        time.sleep(5)  # Publish data every 5 seconds
 
-# Create the sensors
-temperature_sensor = TemperatureSensor(mqtt_client, topics[0])
-humidity_sensor = HumiditySensor(mqtt_client, topics[1])
-light_intensity_sensor = LightIntensitySensor(mqtt_client, topics[2])
-#air_quality_sensor = AirQualitySensor(mqtt_client, topics[3])
+        # Uncomment the line below if you want to see the published data in the console
+        print(f"Published {sensor} data: {data}")
 
-# Add the sensors to the SensorManager
-sensor_manager = SensorManager()
-sensor_manager.add_sensor(temperature_sensor)
-sensor_manager.add_sensor(humidity_sensor)
-sensor_manager.add_sensor(light_intensity_sensor)
-#sensor_manager.add_sensor(air_quality_sensor)
+# Publish data for each sensor
+threads=[]
+for sensor, topic in topics.items():
+    thread = threading.Thread(target=publish_sensor_data, args=(sensor, topic))
+    threads.append(thread)
+    thread.start()
 
-try:
-   sensor_manager.run()
-except KeyboardInterrupt:
-   sensor_manager.stop_all()
+# Wait for all threads to complete (which they won't, as they're infinite loops)
+for thread in threads:
+    thread.join()
