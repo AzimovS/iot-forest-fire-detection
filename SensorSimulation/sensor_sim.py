@@ -33,10 +33,10 @@ def publish_sensor_data(sensor, topic):
             data = random.randint(0, 500)  # Simulating air quality index between 0 to 500
 
         mqtt_client.publish(topic, payload=str(data))
-        time.sleep(5)  # Publish data every 5 seconds
+        time.sleep(time_sleep)  # Breaks between publishing data (defined in config)
 
         # Uncomment the line below if you want to see the published data in the console
-        print(f"Published {sensor} data: {data}")
+        #print(f"Published {sensor} data: {data}")
 
 # Publish data for each sensor
 threads=[]
