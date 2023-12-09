@@ -16,6 +16,7 @@ topics = {
     'light_intensity': config['mqtt']['topic_light'],
     'air_quality': config['mqtt']['topic_air_quality']
 }
+time_sleep = int(config['mqtt']['time_sleep'])
 
 # Function to publish sensor data to MQTT broker
 def publish_sensor_data(sensor, topic):
@@ -31,12 +32,12 @@ def publish_sensor_data(sensor, topic):
             data = random.randint(0, 1000)  # Simulating light intensity between 0 to 1000
         elif sensor == 'air_quality':
             data = random.randint(0, 500)  # Simulating air quality index between 0 to 500
-
-        mqtt_client.publish(topic, payload=str(data))
+        #mqtt_client.publish(topic, payload=str(data))
+        mqtt_client.publish(topic, f'{{"check":{data}}}')
         time.sleep(time_sleep)  # Breaks between publishing data (defined in config)
 
         # Uncomment the line below if you want to see the published data in the console
-        #print(f"Published {sensor} data: {data}")
+        print(f"Published {sensor} data: {data}")
 
 # Publish data for each sensor
 threads=[]
