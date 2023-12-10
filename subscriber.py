@@ -8,7 +8,10 @@ port=1883
 timelive=60
 def on_connect(client, userdata, flags, rc):
   print("Connected with result code "+str(rc))
-  client.subscribe("temperature/forest_1/area_1")
+  client.subscribe("temperature/forest_0/area_0")
+  client.subscribe("humidity/forest_0/area_0")
+  client.subscribe("light_intensity/forest_0/area_0")
+  client.subscribe("air_quality/forest_0/area_0")
 def on_message(client, userdata, msg):
     print(msg.payload.decode())
     
