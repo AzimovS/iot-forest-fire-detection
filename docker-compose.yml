@@ -69,6 +69,19 @@ services:
     networks:
       se4iot-network:
         ipv4_address: 172.30.0.103
+    
+  sensor_simulation:
+    build: 
+      context: ./SensorSimulation/
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./SensorSimulation/:/usr/src/app/
+    restart: always
+    networks:
+      se4iot-network:
+        ipv4_address: 172.30.0.104
+    depends_on:
+      - mqtt
       
 volumes:
   grafana_data: {}
