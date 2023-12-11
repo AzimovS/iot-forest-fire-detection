@@ -65,7 +65,7 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - grafana_data:/var/lib/grafana
+      - ./grafana:/var/lib/grafana
     networks:
       se4iot-network:
         ipv4_address: 172.30.0.103
