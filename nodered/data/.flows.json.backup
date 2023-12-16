@@ -129,7 +129,8 @@
         "y": 380,
         "wires": [
             [
-                "7302329b45ae0a57"
+                "7302329b45ae0a57",
+                "7d0a662dc90015be"
             ]
         ]
     },
@@ -146,11 +147,12 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 220,
-        "y": 480,
+        "x": 200,
+        "y": 460,
         "wires": [
             [
-                "7302329b45ae0a57"
+                "7302329b45ae0a57",
+                "7d0a662dc90015be"
             ]
         ]
     },
@@ -270,7 +272,7 @@
         "type": "debug",
         "z": "356ea6f4c1f619bc",
         "name": "debug 3",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -279,6 +281,51 @@
         "statusType": "auto",
         "x": 940,
         "y": 460,
+        "wires": []
+    },
+    {
+        "id": "7d0a662dc90015be",
+        "type": "join",
+        "z": "356ea6f4c1f619bc",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "num",
+        "reduceFixup": "",
+        "x": 450,
+        "y": 520,
+        "wires": [
+            [
+                "4a0a2751c06fffe6"
+            ]
+        ]
+    },
+    {
+        "id": "4a0a2751c06fffe6",
+        "type": "debug",
+        "z": "356ea6f4c1f619bc",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 560,
         "wires": []
     }
 ]
