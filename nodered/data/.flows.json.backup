@@ -69,26 +69,10 @@
         "y": 200,
         "wires": [
             [
-                "7302329b45ae0a57",
-                "47c24eb7a71cbc7c"
+                "47c24eb7a71cbc7c",
+                "7d0a662dc90015be"
             ]
         ]
-    },
-    {
-        "id": "7302329b45ae0a57",
-        "type": "debug",
-        "z": "356ea6f4c1f619bc",
-        "name": "debug 1",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 540,
-        "y": 300,
-        "wires": []
     },
     {
         "id": "47e6eeba9b644e93",
@@ -107,8 +91,8 @@
         "y": 300,
         "wires": [
             [
-                "7302329b45ae0a57",
-                "1beeb243de303ebc"
+                "1beeb243de303ebc",
+                "7d0a662dc90015be"
             ]
         ]
     },
@@ -129,7 +113,6 @@
         "y": 380,
         "wires": [
             [
-                "7302329b45ae0a57",
                 "7d0a662dc90015be"
             ]
         ]
@@ -151,7 +134,6 @@
         "y": 460,
         "wires": [
             [
-                "7302329b45ae0a57",
                 "7d0a662dc90015be"
             ]
         ]
@@ -169,8 +151,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 780,
-        "y": 100,
+        "x": 1200,
+        "y": 200,
         "wires": []
     },
     {
@@ -192,8 +174,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 550,
-        "y": 100,
+        "x": 980,
+        "y": 200,
         "wires": [
             [
                 "c2db8473aee52b84"
@@ -212,7 +194,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 520,
+        "x": 660,
         "y": 200,
         "wires": [
             [
@@ -239,8 +221,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 550,
-        "y": 380,
+        "x": 760,
+        "y": 340,
         "wires": [
             [
                 "c5cddc6f9b69f181"
@@ -259,8 +241,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 730,
-        "y": 460,
+        "x": 1070,
+        "y": 340,
         "wires": [
             [
                 "03459309e42295bc"
@@ -279,8 +261,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 940,
-        "y": 460,
+        "x": 1240,
+        "y": 300,
         "wires": []
     },
     {
@@ -295,19 +277,19 @@
         "key": "topic",
         "joiner": "\\n",
         "joinerType": "str",
-        "accumulate": false,
+        "accumulate": true,
         "timeout": "",
-        "count": "2",
+        "count": "4",
         "reduceRight": false,
         "reduceExp": "",
         "reduceInit": "",
         "reduceInitType": "num",
         "reduceFixup": "",
-        "x": 450,
-        "y": 520,
+        "x": 510,
+        "y": 400,
         "wires": [
             [
-                "4a0a2751c06fffe6"
+                "e59fded4ef498adf"
             ]
         ]
     },
@@ -324,8 +306,28 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 640,
-        "y": 560,
+        "x": 900,
+        "y": 400,
         "wires": []
+    },
+    {
+        "id": "e59fded4ef498adf",
+        "type": "function",
+        "z": "356ea6f4c1f619bc",
+        "name": "function 1",
+        "func": "const areas = 3;\nconst newMsg = {payload: {}}\nfor (let index = 0; index < areas; index++) {\n    const temperatures = msg.payload[`temperature/forest_0/area_${index}`]['temperature'];\n    const humidity = msg.payload[`humidity/forest_0/area_${index}`]['humidity'];\n    const light_intensity = msg.payload[`light_intensity/forest_0/area_${index}`]['light_intensity'];\n    const air_quality = msg.payload[`air_quality/forest_0/area_${index}`]['air_quality'];\n    \n    let num_warnings = 0;\n    \n    if (temperatures > 0) {\n        num_warnings++;\n    }\n    if (humidity <= 40) {\n        num_warnings++;\n    }\n    if (light_intensity >= 500) {\n        num_warnings++;\n    }\n    if (air_quality >= 0) {\n        num_warnings++;\n    }\n    if (num_warnings > 2) {\n        newMsg.payload[`area_${index}`] = \"Potential Fire\"\n    }\n}\nreturn newMsg",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 400,
+        "wires": [
+            [
+                "4a0a2751c06fffe6"
+            ]
+        ]
     }
 ]
