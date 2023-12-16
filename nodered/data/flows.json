@@ -1,0 +1,331 @@
+[
+    {
+        "id": "356ea6f4c1f619bc",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "a9f14acc998e177d",
+        "type": "influxdb",
+        "hostname": "172.30.0.102",
+        "port": "8086",
+        "protocol": "http",
+        "database": "forestsensors",
+        "name": "Influxdb",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://172.30.0.102:8086",
+        "rejectUnauthorized": false
+    },
+    {
+        "id": "2147a676a4f9c8f6",
+        "type": "mqtt-broker",
+        "name": "se4iot-forest-fire-detection",
+        "broker": "172.30.0.100",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "e2c2a91803f8e944",
+        "type": "mqtt in",
+        "z": "356ea6f4c1f619bc",
+        "name": "temperature/forest/area",
+        "topic": "temperature/+/+",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "2147a676a4f9c8f6",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 200,
+        "wires": [
+            [
+                "7302329b45ae0a57",
+                "47c24eb7a71cbc7c"
+            ]
+        ]
+    },
+    {
+        "id": "7302329b45ae0a57",
+        "type": "debug",
+        "z": "356ea6f4c1f619bc",
+        "name": "debug 1",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 540,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "47e6eeba9b644e93",
+        "type": "mqtt in",
+        "z": "356ea6f4c1f619bc",
+        "name": "humidity/forest/area",
+        "topic": "humidity/+/+",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "2147a676a4f9c8f6",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 300,
+        "wires": [
+            [
+                "7302329b45ae0a57",
+                "1beeb243de303ebc"
+            ]
+        ]
+    },
+    {
+        "id": "8363e9f43467d58d",
+        "type": "mqtt in",
+        "z": "356ea6f4c1f619bc",
+        "name": "light_intensity/forest/area",
+        "topic": "light_intensity/+/+",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "2147a676a4f9c8f6",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 380,
+        "wires": [
+            [
+                "7302329b45ae0a57",
+                "7d0a662dc90015be"
+            ]
+        ]
+    },
+    {
+        "id": "dea083dc4d1609a0",
+        "type": "mqtt in",
+        "z": "356ea6f4c1f619bc",
+        "name": "air_quality/forest/area",
+        "topic": "air_quality/+/+",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "2147a676a4f9c8f6",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 460,
+        "wires": [
+            [
+                "7302329b45ae0a57",
+                "7d0a662dc90015be"
+            ]
+        ]
+    },
+    {
+        "id": "c2db8473aee52b84",
+        "type": "debug",
+        "z": "356ea6f4c1f619bc",
+        "name": "debug 2",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "282c68063de2a0bf",
+        "type": "change",
+        "z": "356ea6f4c1f619bc",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.message",
+                "pt": "msg",
+                "to": "Potential fire detected",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 100,
+        "wires": [
+            [
+                "c2db8473aee52b84"
+            ]
+        ]
+    },
+    {
+        "id": "47c24eb7a71cbc7c",
+        "type": "function",
+        "z": "356ea6f4c1f619bc",
+        "name": "High temperature detection",
+        "func": "if (msg.payload.temperature > 30) {\n    return msg;\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 200,
+        "wires": [
+            [
+                "282c68063de2a0bf"
+            ]
+        ]
+    },
+    {
+        "id": "1beeb243de303ebc",
+        "type": "change",
+        "z": "356ea6f4c1f619bc",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.message",
+                "pt": "msg",
+                "to": "",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 380,
+        "wires": [
+            [
+                "c5cddc6f9b69f181"
+            ]
+        ]
+    },
+    {
+        "id": "c5cddc6f9b69f181",
+        "type": "function",
+        "z": "356ea6f4c1f619bc",
+        "name": "High humidity detection",
+        "func": "if (msg.payload.humidity > 50) {\n    msg.payload.message = \"High humidity detected\";\n} else {\n    msg.payload.message = \"Humidity is stable\";\n}\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 460,
+        "wires": [
+            [
+                "03459309e42295bc"
+            ]
+        ]
+    },
+    {
+        "id": "03459309e42295bc",
+        "type": "debug",
+        "z": "356ea6f4c1f619bc",
+        "name": "debug 3",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "7d0a662dc90015be",
+        "type": "join",
+        "z": "356ea6f4c1f619bc",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": true,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "num",
+        "reduceFixup": "",
+        "x": 450,
+        "y": 520,
+        "wires": [
+            [
+                "4a0a2751c06fffe6"
+            ]
+        ]
+    },
+    {
+        "id": "4a0a2751c06fffe6",
+        "type": "debug",
+        "z": "356ea6f4c1f619bc",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 560,
+        "wires": []
+    }
+]
