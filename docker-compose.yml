@@ -79,7 +79,7 @@ services:
     restart: always
     networks:
       se4iot-network:
-        ipv4_address: 172.30.0.104
+        ipv4_address: 172.30.0.106
     depends_on:
       - mqtt
 
