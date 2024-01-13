@@ -20,6 +20,8 @@
  *
  **/
 
+process.env.BOT_TOKEN = "<Insert Telegram Token here>";
+
 module.exports = {
 
 /*******************************************************************************

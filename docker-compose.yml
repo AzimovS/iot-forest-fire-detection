@@ -13,20 +13,6 @@ services:
     ports:
       - "1883:1883"
       - "9001:9001"
-
-  node-red:
-    container_name: se4iot-nodered
-    build:
-      context: ./nodered/
-      dockerfile: Dockerfile
-    image: se4iot_nodered:latest
-    ports:
-      - "1880:1880"
-    networks:
-      se4iot-network:
-        ipv4_address: 172.30.0.104
-    volumes:
-      - ./nodered/data:/data
   
   telegraf:
     image: telegraf
@@ -96,6 +82,24 @@ services:
         ipv4_address: 172.30.0.106
     depends_on:
       - mqtt
+
+
+  node-red:
+    container_name: se4iot-nodered
+    build:
+      context: ./nodered/
+      dockerfile: Dockerfile
+    image: se4iot_nodered:latest
+    ports:
+      - "1880:1880"
+    networks:
+      se4iot-network:
+        ipv4_address: 172.30.0.105
+    volumes:
+      - ./nodered/data:/data
+    depends_on:
+      - mqtt
+      - influxdb
       
 volumes:
   grafana_data: {}
