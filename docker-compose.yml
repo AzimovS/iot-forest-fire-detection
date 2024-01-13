@@ -97,6 +97,9 @@ services:
         ipv4_address: 172.30.0.105
     volumes:
       - ./nodered/data:/data
+    depends_on:
+      - mqtt
+      - influxdb
       
 volumes:
   grafana_data: {}
