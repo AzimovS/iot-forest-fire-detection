@@ -1,0 +1,113 @@
+version: '3.6'
+services:
+  mqtt:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    restart: always
+    volumes:
+      - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mosquitto/data/:/mosquitto/data
+    networks:
+      se4iot-network:
+        ipv4_address: 172.30.0.100
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+  
+  telegraf:
+    image: telegraf
+    container_name: telegraf
+    restart: always
+    volumes:
+    - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    depends_on:
+      - influxdb
+      - mqtt
+    links:
+      - influxdb
+    ports:
+      - '8125:8125'    
+    networks:
+      se4iot-network:
+        ipv4_address: 172.30.0.101
+
+  influxdb:
+    image: influxdb:2.4-alpine
+    container_name: influxdb
+    restart: always
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=se4iot_token
+      - DOCKER_INFLUXDB_INIT_ORG=se4iot
+      - DOCKER_INFLUXDB_INIT_BUCKET=forestsensors
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=admin123
+    ports:
+      - '8086:8086'
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+    networks:
+      se4iot-network:
+        ipv4_address: 172.30.0.102
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana-server
+    restart: always
+    depends_on:
+      - influxdb
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=
+    links:
+      - influxdb
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./grafana:/var/lib/grafana
+    networks:
+      se4iot-network:
+        ipv4_address: 172.30.0.103
+    
+  sensor_simulation:
+    build: 
+      context: ./SensorSimulation/
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./SensorSimulation/:/usr/src/app/
+    restart: always
+    networks:
+      se4iot-network:
+        ipv4_address: 172.30.0.106
+    depends_on:
+      - mqtt
+
+
+  node-red:
+    container_name: se4iot-nodered
+    build:
+      context: ./nodered/
+      dockerfile: Dockerfile
+    image: se4iot_nodered:latest
+    ports:
+      - "1880:1880"
+    networks:
+      se4iot-network:
+        ipv4_address: 172.30.0.105
+    volumes:
+      - ./nodered/data:/data
+    depends_on:
+      - mqtt
+      - influxdb
+      
+volumes:
+  grafana_data: {}
+  influxdb_data: {}
+
+networks:
+  se4iot-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/16
