@@ -2,7 +2,7 @@ version: '3.6'
 services:
   mqtt:
     image: eclipse-mosquitto:latest
-    container_name: mosquitto
+    container_name: mosquitto-ffds
     restart: always
     volumes:
       - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
@@ -13,10 +13,24 @@ services:
     ports:
       - "1883:1883"
       - "9001:9001"
+
+  node-red:
+    container_name: se4iot-nodered-ffds
+    build:
+      context: ./nodered/
+      dockerfile: Dockerfile
+    image: se4iot_nodered:latest
+    ports:
+      - "1880:1880"
+    networks:
+      se4iot-network:
+        ipv4_address: 172.30.0.104
+    volumes:
+      - ./nodered/data:/data
   
   telegraf:
     image: telegraf
-    container_name: telegraf
+    container_name: telegraf-ffds
     restart: always
     volumes:
     - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
@@ -33,7 +47,7 @@ services:
 
   influxdb:
     image: influxdb:2.4-alpine
-    container_name: influxdb
+    container_name: influxdb-ffds
     restart: always
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
@@ -52,7 +66,7 @@ services:
 
   grafana:
     image: grafana/grafana
-    container_name: grafana-server
+    container_name: grafana-server-ffds
     restart: always
     depends_on:
       - influxdb
@@ -82,24 +96,6 @@ services:
         ipv4_address: 172.30.0.106
     depends_on:
       - mqtt
-
-
-  node-red:
-    container_name: se4iot-nodered
-    build:
-      context: ./nodered/
-      dockerfile: Dockerfile
-    image: se4iot_nodered:latest
-    ports:
-      - "1880:1880"
-    networks:
-      se4iot-network:
-        ipv4_address: 172.30.0.105
-    volumes:
-      - ./nodered/data:/data
-    depends_on:
-      - mqtt
-      - influxdb
       
 volumes:
   grafana_data: {}
